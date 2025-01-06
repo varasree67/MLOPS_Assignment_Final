@@ -1,0 +1,20 @@
+name: MloppsassignC
+'on':
+  - issue_comment
+jobs:
+  my_first_job:
+    runs-on: ubuntu-latest
+    name: Just a simple demo job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: See full payload (for debugging)
+        env:
+          PAYLOAD: '${{ toJSON(github.event) }}'
+        run: 'echo "FULL PAYLOAD:\n${PAYLOAD}\n"'
+      - name: Run the container and make a prediction
+        if: 'startsWith(github.event.comment.body, ''/predict'')'
+        uses: ./
+        id: make_prediction
+        with:
+          issue_comment_body: '${{ github.event.comment.body }}'
